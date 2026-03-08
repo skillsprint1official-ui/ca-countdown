@@ -95,20 +95,13 @@
       padding:50px 24px 36px;
     }
 
-    /* ── TOP: time ── */
+    /* ── TOP: date only ── */
     .top { display:flex; flex-direction:column; align-items:center; gap:6px; }
 
-    #livetime {
-      font-family:'Bebas Neue', cursive;
-      font-size:72px;
-      letter-spacing:8px;
-      color:#e8e8e8;
-      line-height:1;
-    }
-
     #livedate {
-      font-size:11px;
-      letter-spacing:5px;
+      font-family:'Bebas Neue', cursive;
+      font-size:32px;
+      letter-spacing:6px;
       color:#2a2a2a;
       text-transform:uppercase;
     }
@@ -139,13 +132,6 @@
     #daysNumber.urgent  { color:#e05555; }
     #daysNumber.warning { color:#e0a030; }
 
-    .days-word {
-      font-size:12px;
-      letter-spacing:8px;
-      color:#6a4e28;
-      text-transform:uppercase;
-      margin-top:8px;
-    }
 
     #statusMsg {
       font-family:'Bebas Neue', cursive;
@@ -270,14 +256,12 @@
 <div id="screen">
 
   <div class="top">
-    <div id="livetime">00:00</div>
     <div id="livedate">MON, 01 JAN</div>
   </div>
 
   <div class="center">
     <div class="days-label">Days Remaining</div>
     <div id="daysNumber">--</div>
-    <div class="days-word">CA FOUNDATION</div>
     <div id="statusMsg"></div>
   </div>
 
@@ -307,13 +291,9 @@
     return Math.round((b - a) / 86400000);
   }
 
-  // ── Time update (every minute only) ──
+  // ── Date update (every minute only) ──
   function updateTime() {
     const now = new Date();
-    const hh = String(now.getHours()).padStart(2,'0');
-    const mm = String(now.getMinutes()).padStart(2,'0');
-    document.getElementById('livetime').textContent = hh + ':' + mm;
-
     const D = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
     const M = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
     document.getElementById('livedate').textContent =
@@ -420,3 +400,4 @@
 </script>
 </body>
 </html>
+
