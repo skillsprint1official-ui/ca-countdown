@@ -8,262 +8,265 @@
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
   <title>CA Countdown</title>
-  <link rel="manifest" href="manifest.json"/>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
-
   <style>
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
-    :root {
-      --black:  #000000;
-      --gold:   #c8a96e;
-      --gold2:  #6a4e28;
-      --dim:    #1a1a1a;
-      --dimmer: #0d0d0d;
-      --gone:   #c8a96e;   /* filled circle = day gone */
-      --left:   #1e1e1e;   /* empty circle = day left */
-      --today:  #ffffff;   /* today's circle */
-    }
-
     html, body {
       width:100%; height:100%;
-      background: var(--black);
-      color: #e8e8e8;
-      font-family: 'Space Mono', monospace;
-      overflow: hidden;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: none;
+      background:#000;
+      color:#e8e8e8;
+      font-family:'Space Mono', monospace;
+      overflow:hidden;
+      -webkit-tap-highlight-color:transparent;
     }
 
-    /* ───── MAIN SCREEN ───── */
-    #screen {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      height: 100vh;
-      width: 100vw;
-      padding: 42px 20px 32px;
-    }
-
-    /* ── TOP: date + time ── */
-    .top {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      width: 100%;
-    }
-
-    #livetime {
-      font-family: 'Bebas Neue', cursive;
-      font-size: clamp(52px, 16vw, 80px);
-      letter-spacing: 6px;
-      color: #e8e8e8;
-      line-height: 1;
-    }
-
-    #livedate {
-      font-size: 10px;
-      letter-spacing: 5px;
-      color: #2e2e2e;
-      text-transform: uppercase;
-    }
-
-    /* ── COUNTDOWN CENTER ── */
-    .center {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-    }
-
-    .days-label {
-      font-size: 9px;
-      letter-spacing: 5px;
-      color: #2a2a2a;
-      text-transform: uppercase;
-      margin-bottom: 4px;
-    }
-
-    #daysNumber {
-      font-family: 'Bebas Neue', cursive;
-      font-size: clamp(90px, 28vw, 150px);
-      line-height: 0.9;
-      color: var(--gold);
-      letter-spacing: -2px;
-    }
-
-    #daysNumber.urgent  { color: #e05555; }
-    #daysNumber.warning { color: #e0a030; }
-
-    .days-word {
-      font-size: 10px;
-      letter-spacing: 7px;
-      color: var(--gold2);
-      text-transform: uppercase;
-      margin-top: 6px;
-    }
-
-    #statusMsg {
-      font-family: 'Bebas Neue', cursive;
-      font-size: clamp(14px, 4vw, 20px);
-      letter-spacing: 3px;
-      color: #2a2a2a;
-      text-align: center;
-      margin-top: 8px;
-    }
-
-    /* ── CIRCLES GRID ── */
-    .grid-section {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      width: 100%;
-    }
-
-    .grid-label {
-      font-size: 8px;
-      letter-spacing: 4px;
-      color: #222;
-      text-transform: uppercase;
-    }
-
-    #circlesGrid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 5px;
-      width: 100%;
-      max-width: 340px;
-    }
-
-    .circle {
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-
-    .circle.gone  { background: var(--gone); }
-    .circle.today { background: var(--today); box-shadow: 0 0 8px rgba(255,255,255,0.6); }
-    .circle.left  { background: var(--left); }
-
-    /* ── BOTTOM ── */
-    .bottom {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .exam-tag {
-      font-size: 8px;
-      letter-spacing: 4px;
-      color: #1e1e1e;
-      text-transform: uppercase;
-    }
-
-    .thin-line {
-      width: 40px;
-      height: 1px;
-      background: #111;
-      margin: 4px 0;
-    }
-
-    #progressBar {
-      width: 160px;
-      height: 2px;
-      background: #111;
-      border-radius: 2px;
-      overflow: hidden;
-      margin-top: 4px;
-    }
-
-    #progressFill {
-      height: 100%;
-      background: var(--gold);
-      border-radius: 2px;
-      transition: width 0s;
-    }
-
-    #progressLabel {
-      font-size: 8px;
-      letter-spacing: 2px;
-      color: #222;
-      margin-top: 4px;
-    }
-
-    /* ───── SETUP SCREEN ───── */
+    /* ═══════════════════════════
+       SETUP SCREEN
+    ═══════════════════════════ */
     #setup {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      gap: 20px;
-      padding: 40px 28px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      height:100vh;
+      gap:24px;
+      padding:40px 28px;
     }
 
     #setup h1 {
-      font-family: 'Bebas Neue', cursive;
-      font-size: 36px;
-      letter-spacing: 6px;
-      color: var(--gold);
-      text-align: center;
+      font-family:'Bebas Neue', cursive;
+      font-size:42px;
+      letter-spacing:6px;
+      color:#c8a96e;
+      text-align:center;
+      line-height:1.1;
     }
 
-    .field { display:flex; flex-direction:column; gap:8px; width:100%; max-width:300px; }
-    .field label { font-size:9px; letter-spacing:3px; color:#333; text-transform:uppercase; }
+    #setup p {
+      font-size:11px;
+      color:#333;
+      letter-spacing:3px;
+      text-align:center;
+      text-transform:uppercase;
+    }
+
+    .field { display:flex; flex-direction:column; gap:10px; width:100%; max-width:300px; }
+    .field label { font-size:10px; letter-spacing:3px; color:#444; text-transform:uppercase; }
     .field input {
-      background: #0d0d0d;
-      border: 1px solid #1a1a1a;
-      border-radius: 10px;
-      color: #e8e8e8;
-      font-family: 'Space Mono', monospace;
-      font-size: 14px;
-      padding: 12px 16px;
-      width: 100%;
-      outline: none;
-      -webkit-appearance: none;
+      background:#0d0d0d;
+      border:1px solid #222;
+      border-radius:12px;
+      color:#e8e8e8;
+      font-family:'Space Mono', monospace;
+      font-size:16px;
+      padding:14px 18px;
+      width:100%;
+      outline:none;
+      -webkit-appearance:none;
     }
-    .field input:focus { border-color: var(--gold); }
-    .field input::-webkit-calendar-picker-indicator { filter: invert(0.3); }
+    .field input:focus { border-color:#c8a96e; }
+    .field input::-webkit-calendar-picker-indicator { filter:invert(0.4); }
 
-    .btn {
-      background: var(--gold);
-      border: none;
-      border-radius: 12px;
-      color: #000;
-      font-family: 'Bebas Neue', cursive;
-      font-size: 20px;
-      letter-spacing: 4px;
-      padding: 14px;
-      width: 100%;
-      max-width: 300px;
-      cursor: pointer;
+    .btn-setup {
+      background:#c8a96e;
+      border:none;
+      border-radius:14px;
+      color:#000;
+      font-family:'Bebas Neue', cursive;
+      font-size:22px;
+      letter-spacing:5px;
+      padding:16px;
+      width:100%;
+      max-width:300px;
+      cursor:pointer;
     }
 
-    .reset-btn {
-      position: fixed;
-      bottom: 16px;
-      right: 16px;
-      background: transparent;
-      border: 1px solid #111;
-      border-radius: 8px;
-      color: #1e1e1e;
-      font-family: 'Space Mono', monospace;
-      font-size: 8px;
-      letter-spacing: 2px;
-      padding: 6px 12px;
-      cursor: pointer;
-      text-transform: uppercase;
-      z-index: 10;
+    /* ═══════════════════════════
+       COUNTDOWN SCREEN
+    ═══════════════════════════ */
+    #screen {
+      display:none;
+      flex-direction:column;
+      align-items:center;
+      justify-content:space-between;
+      height:100vh;
+      width:100vw;
+      padding:50px 24px 36px;
+    }
+
+    /* ── TOP: time ── */
+    .top { display:flex; flex-direction:column; align-items:center; gap:6px; }
+
+    #livetime {
+      font-family:'Bebas Neue', cursive;
+      font-size:72px;
+      letter-spacing:8px;
+      color:#e8e8e8;
+      line-height:1;
+    }
+
+    #livedate {
+      font-size:11px;
+      letter-spacing:5px;
+      color:#2a2a2a;
+      text-transform:uppercase;
+    }
+
+    /* ── CENTER: big number ── */
+    .center {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:4px;
+    }
+
+    .days-label {
+      font-size:11px;
+      letter-spacing:5px;
+      color:#2a2a2a;
+      text-transform:uppercase;
+    }
+
+    #daysNumber {
+      font-family:'Bebas Neue', cursive;
+      font-size:160px;
+      line-height:0.85;
+      color:#c8a96e;
+      letter-spacing:-4px;
+    }
+
+    #daysNumber.urgent  { color:#e05555; }
+    #daysNumber.warning { color:#e0a030; }
+
+    .days-word {
+      font-size:12px;
+      letter-spacing:8px;
+      color:#6a4e28;
+      text-transform:uppercase;
+      margin-top:8px;
+    }
+
+    #statusMsg {
+      font-family:'Bebas Neue', cursive;
+      font-size:22px;
+      letter-spacing:4px;
+      color:#2a2a2a;
+      text-align:center;
+      margin-top:6px;
+    }
+
+    /* ── CIRCLES GRID ── */
+    .grid-wrap {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+      width:100%;
+    }
+
+    .grid-label {
+      font-size:9px;
+      letter-spacing:4px;
+      color:#1e1e1e;
+      text-transform:uppercase;
+    }
+
+    #circlesGrid {
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:6px;
+      width:100%;
+      max-width:360px;
+      padding:0 4px;
+    }
+
+    .dot {
+      border-radius:50%;
+      flex-shrink:0;
+      width:14px;
+      height:14px;
+    }
+    .dot.gone  { background:#c8a96e; }
+    .dot.today { background:#ffffff; box-shadow:0 0 8px rgba(255,255,255,0.7); }
+    .dot.left  { background:#1c1c1c; }
+
+    /* ── BOTTOM ── */
+    .bottom {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:6px;
+    }
+
+    #examTag {
+      font-size:10px;
+      letter-spacing:3px;
+      color:#1e1e1e;
+      text-transform:uppercase;
+    }
+
+    #progressBar {
+      width:180px;
+      height:2px;
+      background:#111;
+      border-radius:2px;
+      overflow:hidden;
+      margin-top:4px;
+    }
+    #progressFill {
+      height:100%;
+      background:#c8a96e;
+      border-radius:2px;
+    }
+    #progressLabel {
+      font-size:9px;
+      letter-spacing:2px;
+      color:#1e1e1e;
+      margin-top:4px;
+    }
+
+    /* reset button - tiny, bottom right */
+    #resetBtn {
+      position:fixed;
+      bottom:14px;
+      right:14px;
+      background:transparent;
+      border:1px solid #111;
+      border-radius:8px;
+      color:#222;
+      font-family:'Space Mono', monospace;
+      font-size:9px;
+      letter-spacing:1px;
+      padding:6px 10px;
+      cursor:pointer;
+      text-transform:uppercase;
+      z-index:99;
     }
   </style>
 </head>
 <body>
 
-<!-- ── MAIN SCREEN ── -->
+<!-- ═══ SETUP ═══ -->
+<div id="setup">
+  <h1>CA Foundation<br/>Countdown</h1>
+  <p>Ek baar set karo — phir bhool jao</p>
+
+  <div class="field">
+    <label>Aaj ki date (Start)</label>
+    <input type="date" id="startInput"/>
+  </div>
+
+  <div class="field">
+    <label>Exam Date</label>
+    <input type="date" id="examInput"/>
+  </div>
+
+  <button class="btn-setup" onclick="saveSetup()">SHURU KARO ▶</button>
+</div>
+
+<!-- ═══ COUNTDOWN ═══ -->
 <div id="screen">
 
   <div class="top">
@@ -275,154 +278,125 @@
     <div class="days-label">Days Remaining</div>
     <div id="daysNumber">--</div>
     <div class="days-word">CA FOUNDATION</div>
-    <div id="statusMsg">LOADING...</div>
+    <div id="statusMsg"></div>
   </div>
 
-  <div class="grid-section">
-    <div class="grid-label">Life Calendar · Today to Exam</div>
+  <div class="grid-wrap">
+    <div class="grid-label">● Gone &nbsp;● Today &nbsp;○ Left</div>
     <div id="circlesGrid"></div>
   </div>
 
   <div class="bottom">
-    <div class="exam-tag" id="examTag">TARGET · MAY 14, 2025</div>
-    <div class="thin-line"></div>
+    <div id="examTag"></div>
     <div id="progressBar"><div id="progressFill" style="width:0%"></div></div>
     <div id="progressLabel">0% DONE</div>
   </div>
 
 </div>
 
-<!-- ── SETUP SCREEN ── -->
-<div id="setup">
-  <h1>CA Foundation<br/>Countdown</h1>
-
-  <div class="field">
-    <label>Your Start Date (Today)</label>
-    <input type="date" id="startInput"/>
-  </div>
-
-  <div class="field">
-    <label>Exam Date</label>
-    <input type="date" id="examInput"/>
-  </div>
-
-  <button class="btn" onclick="saveSetup()">START COUNTDOWN</button>
-</div>
-
-<button class="reset-btn" onclick="resetApp()">⚙</button>
+<button id="resetBtn" onclick="resetApp()">⚙ Reset</button>
 
 <script>
-  const EXAM_DATE  = new Date('2025-05-14');
-  const KEY = 'ca_v2';
+  const KEY = 'ca_v3';
 
-  // ── UTILS ──
   function today0() {
     const d = new Date(); d.setHours(0,0,0,0); return d;
   }
 
-  function getDays(from, to) {
-    return Math.round((to - from) / 86400000);
+  function daysBetween(a, b) {
+    return Math.round((b - a) / 86400000);
   }
 
-  // ── TIME (only updates every minute — battery friendly) ──
+  // ── Time update (every minute only) ──
   function updateTime() {
     const now = new Date();
     const hh = String(now.getHours()).padStart(2,'0');
     const mm = String(now.getMinutes()).padStart(2,'0');
     document.getElementById('livetime').textContent = hh + ':' + mm;
 
-    const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
-    const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+    const D = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+    const M = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
     document.getElementById('livedate').textContent =
-      days[now.getDay()] + ', ' +
-      String(now.getDate()).padStart(2,'0') + ' ' +
-      months[now.getMonth()];
+      D[now.getDay()] + ', ' + String(now.getDate()).padStart(2,'0') + ' ' + M[now.getMonth()];
   }
 
-  // ── CIRCLES GRID ──
-  function buildGrid(startDate, examDate) {
-    const t = today0();
-    const total = getDays(startDate, examDate);
-    const gone  = getDays(startDate, t);
-    const grid  = document.getElementById('circlesGrid');
-    grid.innerHTML = '';
-
-    // Responsive circle size
-    const vw = window.innerWidth;
-    const cols = Math.min(total, vw < 360 ? 14 : 16);
-    const gap = 5;
-    const available = Math.min(vw - 40, 340);
-    const size = Math.floor((available - (cols - 1) * gap) / cols);
-
-    for (let i = 0; i < total; i++) {
-      const c = document.createElement('div');
-      c.className = 'circle ' + (i < gone ? 'gone' : i === gone ? 'today' : 'left');
-      c.style.width  = size + 'px';
-      c.style.height = size + 'px';
-      grid.appendChild(c);
-    }
-  }
-
-  // ── STATUS ──
   function getStatus(days) {
-    if (days < 0)   return 'EXAM OVER.';
-    if (days === 0) return 'EXAM DAY. JAI HO.';
+    if (days < 0)   return 'RESULT AWAITED.';
+    if (days === 0) return 'EXAM DAY. JAI HO! 🔥';
     if (days <= 3)  return 'LAST FEW DAYS. ALL IN.';
     if (days <= 7)  return 'FINAL WEEK. LOCK IN.';
     if (days <= 14) return 'TWO WEEKS. NO BREAKS.';
     if (days <= 30) return 'LAST MONTH. GRIND.';
     if (days <= 60) return 'GRIND SEASON.';
+    if (days <= 90) return 'BUILD THE HABIT NOW.';
     return 'EARLY START = BIG LEAD.';
   }
 
-  // ── RENDER MAIN ──
+  function buildGrid(startDate, examDate) {
+    const t     = today0();
+    const total = daysBetween(startDate, examDate);
+    const gone  = Math.max(0, daysBetween(startDate, t));
+    const grid  = document.getElementById('circlesGrid');
+    grid.innerHTML = '';
+
+    for (let i = 0; i < total; i++) {
+      const d = document.createElement('div');
+      d.className = 'dot ' + (i < gone ? 'gone' : i === gone ? 'today' : 'left');
+      grid.appendChild(d);
+    }
+  }
+
   function render(data) {
     const startDate = new Date(data.start); startDate.setHours(0,0,0,0);
     const examDate  = new Date(data.exam);  examDate.setHours(0,0,0,0);
     const t = today0();
 
-    const daysLeft  = getDays(t, examDate);
-    const total     = getDays(startDate, examDate);
-    const gone      = getDays(startDate, t);
-    const pct       = Math.min(100, Math.max(0, Math.round((gone / total) * 100)));
+    const daysLeft = daysBetween(t, examDate);
+    const total    = daysBetween(startDate, examDate);
+    const gone     = Math.max(0, daysBetween(startDate, t));
+    const pct      = total > 0 ? Math.min(100, Math.round((gone / total) * 100)) : 0;
 
-    // Days number
+    // Big number
     const el = document.getElementById('daysNumber');
     el.textContent = Math.max(daysLeft, 0);
-    el.className = daysLeft <= 7 ? 'urgent' : daysLeft <= 30 ? 'warning' : '';
+    el.className   = daysLeft <= 7 ? 'urgent' : daysLeft <= 30 ? 'warning' : '';
 
     document.getElementById('statusMsg').textContent = getStatus(daysLeft);
 
     // Exam tag
-    const ed = examDate;
-    const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+    const M = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
     document.getElementById('examTag').textContent =
-      'TARGET · ' + months[ed.getMonth()] + ' ' + String(ed.getDate()).padStart(2,'0') + ', ' + ed.getFullYear();
+      'TARGET · ' + M[examDate.getMonth()] + ' ' +
+      String(examDate.getDate()).padStart(2,'0') + ', ' + examDate.getFullYear();
 
     // Progress
     document.getElementById('progressFill').style.width = pct + '%';
-    document.getElementById('progressLabel').textContent = pct + '% DONE';
+    document.getElementById('progressLabel').textContent = pct + '% PREP DONE';
 
-    // Grid
+    // Circles
     buildGrid(startDate, examDate);
 
-    // Show screen
+    // Switch screens
     document.getElementById('setup').style.display  = 'none';
     document.getElementById('screen').style.display = 'flex';
+
+    // Start clock
+    updateTime();
+    setInterval(updateTime, 60000);
   }
 
-  // ── SETUP SAVE ──
   function saveSetup() {
     const s = document.getElementById('startInput').value;
     const e = document.getElementById('examInput').value;
     if (!s || !e) { alert('Dono dates bharo!'); return; }
+    if (new Date(e) <= new Date(s)) { alert('Exam date, start date se baad honi chahiye!'); return; }
     const data = { start: s, exam: e };
     localStorage.setItem(KEY, JSON.stringify(data));
     render(data);
   }
 
-  // ── RESET ──
   function resetApp() {
+    if (!confirm('Reset karein? Sab data hata jayega.')) return;
     localStorage.removeItem(KEY);
     document.getElementById('screen').style.display = 'none';
     document.getElementById('setup').style.display  = 'flex';
@@ -430,22 +404,18 @@
 
   // ── INIT ──
   window.onload = () => {
-    // Default setup values
+    // Set default dates in setup
     const todayStr = today0().toISOString().split('T')[0];
     document.getElementById('startInput').value = todayStr;
     document.getElementById('examInput').value  = '2025-05-14';
 
+    // Check saved data
     const saved = localStorage.getItem(KEY);
     if (saved) {
-      render(JSON.parse(saved));
-    } else {
-      document.getElementById('screen').style.display = 'none';
-      document.getElementById('setup').style.display  = 'flex';
+      try { render(JSON.parse(saved)); }
+      catch(e) { localStorage.removeItem(KEY); }
     }
-
-    // Time: update once now, then every minute
-    updateTime();
-    setInterval(updateTime, 60000); // 1 min interval only — minimal battery
+    // else setup screen already visible by default
   };
 </script>
 </body>
