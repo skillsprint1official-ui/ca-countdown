@@ -284,7 +284,7 @@ function downloadWallpaper(){
 
   // download
   const link=document.createElement('a');
-  link.download='ca-wallpaper-'+Math.max(dl,0)+'days.png';
+  link.download='ca-wallpaper.png';
   link.href=canvas.toDataURL('image/png');
   link.click();
 
@@ -321,3 +321,4 @@ window.onload=()=>{
 </script>
 </body>
 </html>
+
